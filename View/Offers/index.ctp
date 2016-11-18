@@ -10,6 +10,7 @@
         <th>Created</th>
         <th>Modified</th>
         <th></th>
+        <th></th>
     </tr>
 
     <!-- Here is where we loop through our $posts array, printing out post info -->
@@ -33,6 +34,16 @@
                 );
             ?>
         </td>
+        <td>
+            <?php
+                echo $this->Form->postLink(
+                    'Delete',
+                    array('action' => 'delete', $offer['Offer']['id']),
+                    array('confirm' => 'Are you sure?')
+                );
+            ?>
+        </td>
+
     </tr>
     <?php endforeach; ?>
     <?php unset($offer); ?>
