@@ -28,4 +28,28 @@ class OffersController extends AppController {
             $this->Session->setFlash('Unable to add your offer.');
         }
     }
+
+    public function edit($id = null) {
+        if (!$id) {
+            throw new NotFoundException(__('Invalid offer'));
+        }
+
+        $offer = $this->Offer->findById($id);
+        if (!$offer) {
+            throw new NotFoundException(__('Invalid offer'));
+        }
+
+        if ($this->request->is(array('post', 'put'))) {
+            $this->Offer->id = $id;
+            if ($this->Offer->save($this->request->data)) {
+                $this->Session->setFlash('Your offer has been updated.');
+                return $this->redirect(array('action' => 'index'));
+            }
+            $this->Session->setFlash('Unable to update your offer.');
+        }
+
+        if (!$this->request->data) {
+            $this->request->data = $offer;
+        }
+    }
 }
