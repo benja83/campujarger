@@ -1,3 +1,7 @@
+<?php echo $this->Html->link(
+    'Add Offer',
+    array('controller' => 'offers', 'action' => 'add')
+); ?>
 <table>
     <tr>
         <th>Id</th>
