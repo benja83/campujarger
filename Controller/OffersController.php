@@ -1,7 +1,7 @@
 <?php
 class OffersController extends AppController {
     public $helpers = array('Html', 'Form', 'Session');
-    public $components = array('Mail');
+    public $components = array('Mail', 'UpdateOfferValidator');
 
     public function index() {
         $this->set('offers', $this->Offer->find('all'));
@@ -33,14 +33,7 @@ class OffersController extends AppController {
     }
 
     public function edit($id = null) {
-        if (!$id) {
-            throw new NotFoundException(__('Invalid offer'));
-        }
-
-        $offer = $this->Offer->findById($id);
-        if (!$offer) {
-            throw new NotFoundException(__('Invalid offer'));
-        }
+        $offer = $this->UpdateOfferValidator->get_validated_offer($id);
 
         if ($this->request->is(array('post', 'put'))) {
             $this->Offer->id = $id;
