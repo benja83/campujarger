@@ -1,6 +1,7 @@
 <?php
 class OffersController extends AppController {
     public $helpers = array('Html', 'Form', 'Session');
+    public $components = array('Mail');
 
     public function index() {
         $this->set('offers', $this->Offer->find('all'));
@@ -21,8 +22,10 @@ class OffersController extends AppController {
     public function add() {
         if ($this->request->is('post')) {
             $this->Offer->create();
-            if ($this->Offer->save($this->request->data)) {
+            $offer = $this->Offer->save($this->request->data);
+            if ($offer) {
                 $this->Session->setFlash('Your offer has been saved.');
+                $this->Mail->sendEmailTo($offer['Offer']['creator_email']);
                 return $this->redirect(array('action' => 'index'));
             }
             $this->Session->setFlash('Unable to add your offer.');

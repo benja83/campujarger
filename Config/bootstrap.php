@@ -105,3 +105,11 @@ require APP . 'Vendor/autoload.php';
 // See: http://goo.gl/kKVJO7
 spl_autoload_unregister(array('App', 'load'));
 spl_autoload_register(array('App', 'load'), true, true);
+
+// import any environment variables from the .env file (if it exists)
+if(is_file(APP . DS . '.env')) {
+    $vars = json_decode(file_get_contents(APP . DS . '.env'), true);
+    foreach ($vars as $name => $val) {
+        putenv("$name=$val");
+    }
+}
