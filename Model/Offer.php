@@ -11,6 +11,17 @@ class Offer extends AppModel {
             'required' => true,
             'rule' => array('email'),
             'message' => 'Kindly provide your email for verification.'
+        ),
+        'token' => array(
+            'required' => true,
+            array(
+                'rule' => 'isUnique',
+                'message' => 'wrong uuid'
+            )
         )
     );
+
+    public function beforeSave($options = array()) {
+        $this->data['Offer']['token'] = String::uuid();
+    }
 }
