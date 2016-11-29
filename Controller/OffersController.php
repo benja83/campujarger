@@ -1,7 +1,7 @@
 <?php
 class OffersController extends AppController {
     public $helpers = array('Html', 'Form', 'Session');
-    public $components = array('Mail', 'UpdateOfferValidator');
+    public $components = array('Mail', 'UpdateOffer', 'TokenValidator');
 
     public function index() {
         $this->set('offers', $this->Offer->find('all'));
@@ -17,6 +17,10 @@ class OffersController extends AppController {
             throw new NotFoundException(__('Invalid offer'));
         }
         $this->set('offer', $offer);
+        $token = $this->request->query('token');
+        if ($this->TokenValidator->validate($offer, $token)) {
+            $this->set('authenticated', true);
+        }
     }
 
     public function add() {
@@ -33,10 +37,10 @@ class OffersController extends AppController {
     }
 
     public function edit($id = null) {
-        $offer = $this->UpdateOfferValidator->get_validated_offer($id);
+        $offer = $this->UpdateOffer->get_offer($id);
 
         if ($this->request->is(array('post', 'put'))) {
-            $this->Offer->id = $id;
+            $this->UpdateOffer->validate_token($offer, $this->request);
             if ($this->Offer->save($this->request->data)) {
                 $this->Session->setFlash('Your offer has been updated.');
                 return $this->redirect(array('action' => 'index'));
