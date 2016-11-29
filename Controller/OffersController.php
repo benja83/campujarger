@@ -19,7 +19,7 @@ class OffersController extends AppController {
         $this->set('offer', $offer);
         $token = $this->request->query('token');
         if ($this->TokenValidator->validate($offer, $token)) {
-            $this->set('authenticated', true);
+            $this->set('token', $token);
         }
     }
 
@@ -38,14 +38,19 @@ class OffersController extends AppController {
 
     public function edit($id = null) {
         $offer = $this->UpdateOffer->get_offer($id);
+        $token = $this->request->query('token');
 
         if ($this->request->is(array('post', 'put'))) {
-            $this->UpdateOffer->validate_token($offer, $this->request);
-            if ($this->Offer->save($this->request->data)) {
-                $this->Session->setFlash('Your offer has been updated.');
-                return $this->redirect(array('action' => 'index'));
+            if ($this->TokenValidator->validate($offer, $token)) {
+                if ($this->Offer->save($this->request->data)) {
+                    $this->Session->setFlash('Your offer has been updated.');
+                    return $this->redirect(array('action' => 'index'));
+                }
+                $this->Session->setFlash('Unable to update your offer.');
+            } else {
+                $this->Session->setFlash('Invalid credentials for this action');
+                return $this->redirect(array('action' => 'view', $id));
             }
-            $this->Session->setFlash('Unable to update your offer.');
         }
 
         if (!$this->request->data) {
@@ -57,15 +62,22 @@ class OffersController extends AppController {
         if ($this->request->is('get')) {
             throw new MethodNotAllowedException();
         }
+        $offer = $this->UpdateOffer->get_offer($id);
+        $token = $this->request->query('token');
 
-        if ($this->Offer->delete($id)) {
-            $this->Session->setFlash(
-                __('The post with id: %s has been deleted.', h($id))
-            );
+        if ($this->TokenValidator->validate($offer, $token)) {
+            if ($this->Offer->delete($id)) {
+                $this->Session->setFlash(
+                    __('The post with id: %s has been deleted.', h($id))
+                );
+            } else {
+                $this->Session->setFlash(
+                    __('The post with id: %s could not be deleted.', h($id))
+                );
+            }
         } else {
-            $this->Session->setFlash(
-                __('The post with id: %s could not be deleted.', h($id))
-            );
+            $this->Session->setFlash('Invalid credentials for this action');
+            return $this->redirect(array('action' => 'view', $id));
         }
 
         return $this->redirect(array('action' => 'index'));

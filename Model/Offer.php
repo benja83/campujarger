@@ -22,6 +22,13 @@ class Offer extends AppModel {
     );
 
     public function beforeSave($options = array()) {
-        $this->data['Offer']['token'] = String::uuid();
+        if (!array_key_exists('id', $this->data['Offer'])) {
+            $this->data['Offer']['token'] = String::uuid();
+            return;
+        }
+        $offer = $this->findById($this->data['Offer']['id']);
+        if (is_null($offer['Offer']['token'])) {
+            $this->data['Offer']['token'] = String::uuid();
+        }
     }
 }
