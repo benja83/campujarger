@@ -71,8 +71,7 @@ class DATABASE_CONFIG {
 	public $default;
 
 	public function __construct() {
-	    $DATABASE_URL = parse_url(getenv('DATABASE_URL'));
-	    var_dump($DATABASE_URL);
+	    $DATABASE_URL = parse_url(getenv('CLEARDB_DATABASE_URL'));
 	    $this->default = array(
 	      'datasource' => 'Database/Mysql',
 	      'persistent' => false,
