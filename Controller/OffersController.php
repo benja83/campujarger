@@ -68,11 +68,11 @@ class OffersController extends AppController {
         if ($this->TokenValidator->validate($offer, $token)) {
             if ($this->Offer->delete($id)) {
                 $this->Session->setFlash(
-                    __('The post with id: %s has been deleted.', h($id))
+                    __('The offer with id: %s has been deleted.', h($id))
                 );
             } else {
                 $this->Session->setFlash(
-                    __('The post with id: %s could not be deleted.', h($id))
+                    __('The offer with id: %s could not be deleted.', h($id))
                 );
             }
         } else {
