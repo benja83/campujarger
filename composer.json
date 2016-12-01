@@ -2,7 +2,9 @@
     "name": "example-app",
     "require": {
         "cakephp/cakephp": "2.6.*",
-        "cakephp/debug_kit": "^2.2.0"
+        "cakephp/debug_kit": "^2.2.0",
+        "php": "^5.6.0",
+        "ext-mbstring": "*"
     },
     "config": {
         "vendor-dir": "Vendor/"
