@@ -29,7 +29,7 @@ class OffersController extends AppController {
             $offer = $this->Offer->save($this->request->data);
             if ($offer) {
                 $this->Session->setFlash('Your offer has been saved.');
-                $this->Mail->sendEmailTo($offer['Offer']['creator_email']);
+                $this->Mail->sendEmailConfirmationFor($offer);
                 return $this->redirect(array('action' => 'index'));
             }
             $this->Session->setFlash('Unable to add your offer.');
